@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  power-dai:
+    image: power_dai:dev
+    build:
+      context: .
+    container_name: power_dai
+    command: ["yarn", "start"]
+    volumes:
+      - .:/app
+      - node-modules:/app/node_modules
+    ports:
+      - "3000:3000"
+    env_file: .env
+
+volumes:
+  node-modules:
