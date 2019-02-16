@@ -11,10 +11,10 @@ const walletInfo = (props) => {
             Login
         </Button>
     );
-    if (props.address && props.balance) {
+    if (props.network && props.address && props.balance) {
         let _address = props.address.toString()
         let address = _address.substring(_address.length - 8, _address.length);
-        wallet = address + ' ' + props.balance
+        wallet = props.network + ' ' + address + ' ' + props.balance
     }
 
 	return (

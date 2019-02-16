@@ -1,86 +1,67 @@
-import * as actionTypes from './actionTypes';
+import * as actionTypes from '../actions/actionTypes';
 
+// GET TIME TO STOP ALLOWING PARTICIPANTS TO SPLASH
 
-// GET USER ADDRESS
-
-export const fetchAddress = (web3) => {
+export const fetchTimeStopSplash = () => {
     return dispatch => {
-		web3.eth.getAccounts()
-			.then((accounts) => {
-				let address = accounts[0];
-				dispatch(fetchAddressSuccess(address));
-				})
-			.catch((err) => {
-				dispatch(fetchAddressFailed(err));
-			});
+        dispatch(fetchTimeStopSplashSuccess("2019-02-15 18:52:21.42562"));
     }
 }
 
-export const fetchAddressSuccess = (address) => {
+export const fetchTimeStopSplashSuccess = (time) => {
     return {
-        type: actionTypes.FETCH_ADDRESS_SUCCESS,
-		address: address
-    }
-}
-
-export const fetchAddressFailed = (error) => {
-    return {
-        type: actionTypes.FETCH_ADDRESS_FAILED,
-		error: error
-    }
-}
-
-// GET USER BALANCE
-
-export const fetchBalance = (fm) => {
-	return dispatch => {
-		// Get user balance (includes ERC20 tokens as well)
-		fm.user.getBalances()
-			.then((balances) => {
-				let ethBalance = balances.find((e) => {
-					return e.crypto_currency === 'ETH';
-				});
-				let balance = ethBalance.crypto_amount_display + ' ETH';
-				dispatch(fetchBalanceSuccess(balance));
-			})
-			.catch((err) => {
-				dispatch(fetchBalanceFailed(err));
-			});
-	}
-}
-
-export const fetchBalanceSuccess = (balance) => {
-    return {
-        type: actionTypes.FETCH_BALANCE_SUCCESS,
-		balance: balance
-    }
-}
-
-export const fetchBalanceFailed = (error) => {
-    return {
-        type: actionTypes.FETCH_BALANCE_FAILED,
-		error: error
-    }
-}
-
-// GET LOTTERY INFO
-
-export const fetchLotteryInfo = () => {
-    return dispatch => {
-        dispatch(fetchLotteryInfoSuccess("FAKE_LOTTERY_DATA"));
-    }
-}
-
-export const fetchLotteryInfoSuccess = (lotteryInfo) => {
-    return {
-		type: actionTypes.FETCH_LOTTERY_INFO_SUCCESS,
-		lotteryInfo: lotteryInfo
+		type: actionTypes.FETCH_TIME_STOP_SPLASH_SUCCESS,
+		timeStopSplash: time
 	};
 }
 
-export const fetchLotteryInfoFailed = (error) => {
+export const fetchTimeStopSplashFailed = (error) => {
     return {
-		type: actionTypes.FETCH_LOTTERY_INFO_FAILED,
+		type: actionTypes.FETCH_TIME_STOP_SPLASH_FAILED,
+		error: error
+	};
+}
+
+// GET CURRENT LOTTERY POT
+
+export const fetchCurrentPot = () => {
+    return dispatch => {
+        dispatch(fetchCurrentPotSuccess("$500"));
+    }
+}
+
+export const fetchCurrentPotSuccess = (pot) => {
+    return {
+		type: actionTypes.FETCH_CURRENT_POT_SUCCESS,
+		currentPot: pot
+	};
+}
+
+export const fetchCurrentPotFailed = (error) => {
+    return {
+		type: actionTypes.FETCH_CURRENT_POT_FAILED,
+		error: error
+	};
+}
+
+// GET ENTER POOL
+
+export const enterPool = (web3) => {
+    return dispatch => {
+        console.log("enter!");
+        dispatch(enterPoolSuccess());
+    }
+}
+
+export const enterPoolSuccess = () => {
+    return {
+		type: actionTypes.ENTER_POOL_SUCCESS,
+	};
+}
+
+export const enterPoolFailed = (error) => {
+    return {
+		type: actionTypes.ENTER_POOL_FAILED,
 		error: error
 	};
 }

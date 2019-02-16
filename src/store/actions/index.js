@@ -3,6 +3,11 @@ export {
 	fetchAddressFailed,
 	fetchBalance,
 	fetchBalanceFailed,
-	fetchLotteryInfo,
-	fetchLotteryInfoFailed
+	fetchNetwork,
+	fetchNetworkFailed,
+} from './layout';
+export {
+	fetchTimeStopSplash,
+	fetchCurrentPot,
+	enterPool,
 } from './lottery';

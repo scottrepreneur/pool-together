@@ -14,7 +14,9 @@ class Layout extends Component {
 	state = {
 		showSidebar: false,
 		balance: null,
-		address: null
+		address: null,
+		network: null,
+		error: null
 	}
 	fm = null;
 	accounts = null;
@@ -46,12 +48,19 @@ class Layout extends Component {
 		if (this.state.account) {
 			this.props.onFetchAddress(web3);
 			this.props.onFetchBalance(fm);
+			this.props.onFetchNetwork(window.web3);
 		}
 	}
 
-	componentWillMount() {
+	async componentWillMount () {
 		this.fm = new Fortmatic(process.env.REACT_APP_FORTMATIC_API_KEY);
 		window.web3 = new Web3(this.fm.getProvider());
+		const is_logged_in = await this.fm.user.isLoggedIn();
+		if (is_logged_in) {
+			this.props.onFetchAddress(window.web3);
+			this.props.onFetchBalance(this.fm);
+			this.props.onFetchNetwork(window.web3);
+		}
 	}
 
 	render () {
@@ -62,6 +71,7 @@ class Layout extends Component {
 					loginClick={(web3, fm) => this.loginHandler(web3, fm)}
 					address={this.props.address}
 					balance={this.props.balance}
+					network={this.props.network}
 					web3={window.web3}
 					fm={this.fm}  />
 				<Sidebar
@@ -70,6 +80,7 @@ class Layout extends Component {
 					loginClick={(web3, fm) => this.loginHandler(web3, fm)}
 					address={this.props.address}
 					balance={this.props.balance}
+					network={this.props.network}
 					web3={window.web3}
 					fm={this.fm} />
 				<main className={classes.Content}>
@@ -83,15 +94,18 @@ class Layout extends Component {
 
 const mapStateToProps = state => {
 	return {
-		address: state.lottery.address,
-		balance: state.lottery.balance
+		address: state.layout.address,
+		balance: state.layout.balance,
+		network: state.layout.network,
+		error: state.layout.error
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
 		onFetchAddress: (web3) => dispatch(actions.fetchAddress(web3)),
-		onFetchBalance: (fm) => dispatch(actions.fetchBalance(fm))
+		onFetchBalance: (fm) => dispatch(actions.fetchBalance(fm)),
+		onFetchNetwork: (web3) => dispatch(actions.fetchNetwork(web3))
 	}
 }
 
