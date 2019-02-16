@@ -46,7 +46,7 @@ function splash() public payable atState(States.PoolOpen) {
   //For use w/ DAI Tokens: require(transferFrom(msg.sender, address(this), deposit), "DRAW_FAILED");
   require(msg.value >= min);
   pool = pool + msg.value;
-  savings[msg.sender] = msg.value;
+  savings[msg.sender] = savings[msg.sender] + msg.value;
 
 }
 
