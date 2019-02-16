@@ -1,0 +1,19 @@
+.Footer {
+    grid-area: f;
+    padding-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 125px;
+    grid-template-areas: "c l";
+}
+
+.Copyright {
+    grid-area: c;
+    text-align: left;
+}
+
+.Links {
+    grid-area: l;
+    text-align: right;
+    
+}

@@ -20,3 +20,18 @@
     text-align: center;
     background-color: #4C4949;
 }
+
+.WalletInfo {
+    background-color: #EBF4FF;
+    border: 2px solid red;
+    color: red;
+    border-radius: 4px;
+}
+
+.LottoEntry {
+    font-size: 25px;
+    background-color: #51B9F9;
+    border-radius: 10px;
+    width: 300px;
+    height: 75px;
+}

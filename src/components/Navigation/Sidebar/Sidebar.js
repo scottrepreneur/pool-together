@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import Logo from '../../Logo/Logo';
-import NavigationItems from '../NavigationItems/NavigationItems';
+import WalletInfo from '../WalletInfo/WalletInfo';
 import classes from './Sidebar.module.css'
 import Backdrop from '../../UI/Backdrop/Backdrop';
 import Aux from '../../../hoc/Aux/Aux';
@@ -23,8 +23,13 @@ const sidebar = (props) => {
 					</NavLink>
 				</div>
 				<nav>
-					<NavigationItems 
-						closed={props.closed} />
+					<WalletInfo 
+						loginClick = {(web3, fm) => props.loginClick(web3, fm)}
+						web3={props.web3}
+						fm={props.fm}
+						address={props.address}
+						balance={props.balance} 
+					/>
 				</nav>
 			</div>
 		</Aux>

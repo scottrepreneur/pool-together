@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@makerdao/dai": "^0.11.1",
+    "fortmatic": "^0.3.2",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
     "react-redux": "^6.0.0",
