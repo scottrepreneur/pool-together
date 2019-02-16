@@ -20,7 +20,7 @@ export const fetchAccountInfo = (web3, fm) => {
 		fm.user.getBalances()
 			.then((balances) => {
 				let ethBalance = balances.find((e) => {
-					return e.crypto_currency == 'ETH';
+					return e.crypto_currency === 'ETH';
 				});
 				_accountInfo['balance'] = ethBalance.crypto_amount_display + ' ETH';
 			})

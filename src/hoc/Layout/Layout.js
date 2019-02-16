@@ -7,6 +7,7 @@ import Web3 from 'web3';
 import classes from './Layout.module.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import Sidebar from '../../components/Navigation/Sidebar/Sidebar';
+import Footer from '../../components/Navigation/Footer/Footer';
 import * as actions from '../../store/actions/index';
 
 class Layout extends Component {
@@ -77,6 +78,7 @@ class Layout extends Component {
 				<main className={classes.Content}>
 					{this.props.children}
 				</main>
+				<Footer />
 			</div>
 		);
 	}

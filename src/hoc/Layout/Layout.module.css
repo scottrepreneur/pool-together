@@ -7,8 +7,8 @@
 	grid-template-columns: 150px 1fr 150px;
     grid-template-rows: 
     	80px
-    	800px
-    	150px;
+    	600px
+    	125px;
     grid-template-areas: 
 	        ". h ."
 			". c ."

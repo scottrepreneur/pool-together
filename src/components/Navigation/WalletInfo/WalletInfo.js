@@ -4,7 +4,7 @@ import classes from './WalletInfo.module.css';
 import Button from '../../UI/Button/Button';
 
 const walletInfo = (props) => {
-    let wallet = <Button clicked={props.loginClick}>Login Button</Button>;
+    let wallet = <Button btnType="WalletInfo" clicked={props.loginClick}>Login</Button>;
     if (props.accountInfo) {
         wallet = props.accountInfo.address;
     }
