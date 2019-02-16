@@ -1,6 +1,8 @@
 export {
-	fetchAccountInfo,
-	fetchAccountInfoFailed,
+	fetchAddress,
+	fetchAddressFailed,
+	fetchBalance,
+	fetchBalanceFailed,
 	fetchLotteryInfo,
 	fetchLotteryInfoFailed
 } from './lottery';

@@ -1,47 +1,64 @@
 import * as actionTypes from './actionTypes';
 
 
-// GET ACCOUNT INFO FROM FORTMATIC
+// GET USER ADDRESS
 
-export const fetchAccountInfo = (web3, fm) => {
+export const fetchAddress = (web3) => {
     return dispatch => {
-		let _accountInfo = {};
-		// Get user address
 		web3.eth.getAccounts()
 			.then((accounts) => {
 				let address = accounts[0];
-				_accountInfo['address'] = address;
+				dispatch(fetchAddressSuccess(address));
 				})
 			.catch((err) => {
-				dispatch(fetchAccountInfoFailed(err));
+				dispatch(fetchAddressFailed(err));
 			});
+    }
+}
 
+export const fetchAddressSuccess = (address) => {
+    return {
+        type: actionTypes.FETCH_ADDRESS_SUCCESS,
+		address: address
+    }
+}
+
+export const fetchAddressFailed = (error) => {
+    return {
+        type: actionTypes.FETCH_ADDRESS_FAILED,
+		error: error
+    }
+}
+
+// GET USER BALANCE
+
+export const fetchBalance = (fm) => {
+	return dispatch => {
 		// Get user balance (includes ERC20 tokens as well)
 		fm.user.getBalances()
 			.then((balances) => {
 				let ethBalance = balances.find((e) => {
 					return e.crypto_currency === 'ETH';
 				});
-				_accountInfo['balance'] = ethBalance.crypto_amount_display + ' ETH';
+				let balance = ethBalance.crypto_amount_display + ' ETH';
+				dispatch(fetchBalanceSuccess(balance));
 			})
 			.catch((err) => {
-				dispatch(fetchAccountInfoFailed(err));
+				dispatch(fetchBalanceFailed(err));
 			});
-		
-        dispatch(fetchAccountInfoSuccess(_accountInfo));
+	}
+}
+
+export const fetchBalanceSuccess = (balance) => {
+    return {
+        type: actionTypes.FETCH_BALANCE_SUCCESS,
+		balance: balance
     }
 }
 
-export const fetchAccountInfoSuccess = (account) => {
+export const fetchBalanceFailed = (error) => {
     return {
-        type: actionTypes.FETCH_ACCOUNT_INFO_SUCCESS,
-		accountInfo: account
-    }
-}
-
-export const fetchAccountInfoFailed = (error) => {
-    return {
-        type: actionTypes.FETCH_ACCOUNT_INFO_FAILED,
+        type: actionTypes.FETCH_BALANCE_FAILED,
 		error: error
     }
 }

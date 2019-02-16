@@ -24,7 +24,12 @@ const sidebar = (props) => {
 				</div>
 				<nav>
 					<WalletInfo 
-						loginClick = {props.loginClick} />
+						loginClick = {(web3, fm) => props.loginClick(web3, fm)}
+						web3={props.web3}
+						fm={props.fm}
+						address={props.address}
+						balance={props.balance} 
+					/>
 				</nav>
 			</div>
 		</Aux>
