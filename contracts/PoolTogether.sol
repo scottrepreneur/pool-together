@@ -5,7 +5,7 @@ pragma solidity ^0.5.0;
 contract PoolTogether {
 
   address public owner = msg.sender;
-  uint creationTime = now;
+  uint public creationTime = now;
 
   //States of Contract:
   //PoolOpen: Accepting
@@ -19,7 +19,7 @@ contract PoolTogether {
 
   States state = States.PoolOpen;
   uint pool = 0;
-  uint min = 1;
+  uint min = 1 ether;
 
 
   modifier atState(States _state) {
