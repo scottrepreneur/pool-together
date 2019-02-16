@@ -1,3 +1,38 @@
 .Lottery {
     text-align: center;
+    height: 575px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.Lottery h2 {
+    padding-top: 50px;
+}
+
+.LotteryStats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 250px;
+    grid-template-areas: 
+	        "p t";
+}
+
+.Lottery span {
+    font-size: 25px;
+    color: #505050;
+}
+
+.LotteryStats p {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.Pot {
+    grid-area: p;
+}
+
+.TimeRemaining {
+    grid-area: t;
 }

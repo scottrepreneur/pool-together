@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import classes from './Toolbar.module.css';
 import Logo from '../../Logo/Logo';
-import NavigationItems from '../NavigationItems/NavigationItems';
+import WalletInfo from '../WalletInfo/WalletInfo';
 import SidebarToggle from '../Sidebar/SidebarToggle/SidebarToggle';
 
 const toolbar = (props) => (
@@ -16,7 +16,13 @@ const toolbar = (props) => (
 			</NavLink>
 		</div>
 		<nav className={classes.DesktopOnly}>
-			<NavigationItems />
+			<WalletInfo
+				loginClick = {(web3, fm) => props.loginClick(web3, fm)}
+				web3={props.web3}
+				fm={props.fm}
+				address={props.address}
+				balance={props.balance} 
+			/>
 		</nav>
 	</header>
 );

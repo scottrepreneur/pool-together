@@ -8,6 +8,7 @@ const navigationItems = (props) => {
 	return (
 		<ul className={classes.NavigationItems}>
 			<NavigationItem onClickHandler={props.closed} link="/lottery">Lottery</NavigationItem>
+			<NavigationItem onClickHandler={props.closed} link="/entries">My Entries</NavigationItem>
 		</ul>	
 	);
 }
