@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import Aux from './hoc/Aux/Aux';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import Layout from './hoc/Layout/Layout';
 
@@ -13,16 +14,15 @@ class App extends Component {
     this.props.history.replace(`/${route}`)
   }
 
-
   render() {
     return (
-      <div>
+      <Aux>
         <Layout>
           <Switch>
               <Route path="/" component={asyncLottery} />
             </Switch>
          </Layout>
-      </div>
+      </Aux>
     );
   }
 }
