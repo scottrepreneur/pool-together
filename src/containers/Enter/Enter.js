@@ -32,9 +32,9 @@ class Enter extends Component {
     }
     
     onEnterPoolHandler = () => {
-        // Handle Splash Contract call
-        this.props.onEnterPool(window.web3)
-    }
+		// Handle Splash Contract call
+        this.props.onEnterPool(window.web3, "10");
+	}
 
     render () {
         const formElementsArray = [];
@@ -85,13 +85,12 @@ class Enter extends Component {
 
 const mapStateToProps = state => {
 	return {
-
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-        onEnterPool: (web3) => dispatch(actions.enterPool(web3)),
+		onEnterPool: (web3, amount) => dispatch(actions.enterPool(web3, amount))
 	}
 }
 

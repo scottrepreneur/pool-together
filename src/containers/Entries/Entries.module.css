@@ -1,0 +1,11 @@
+.Entries {
+    text-align: center;
+    height: 575px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.Entries h2 {
+    padding-top: 50px;
+}

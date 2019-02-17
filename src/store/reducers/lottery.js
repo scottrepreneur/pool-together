@@ -23,13 +23,35 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false
             });
-        case actionTypes.FETCH_CURRENT_POT_SUCCESS:
+        case actionTypes.FETCH_CURRENT_POOL_SUCCESS:
 			return updateObject(state, {
-				currentPot: action.currentPot,
+				currentPool: action.currentPool,
 				error: false,
 				loading: false
             });
-        case actionTypes.FETCH_CURRENT_POT_FAILED:
+        case actionTypes.FETCH_CURRENT_POOL_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+            });
+		case actionTypes.FETCH_CURRENT_APR_SUCCESS:
+			return updateObject(state, {
+				currentApr: action.currentApr,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_CURRENT_APR_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.FETCH_ENTRIES_SUCCESS:
+			return updateObject(state, {
+				entries: action.entries,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_ENTRIES_FAILED:
 			return updateObject(state, {
 				error: action.error,
 				loading: false
