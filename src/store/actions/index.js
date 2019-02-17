@@ -8,6 +8,8 @@ export {
 	fetchTimeStopSplash,
 	fetchCurrentPool,
 	fetchEntries,
+	checkDaiAllowance,
+	approveDai,
 	enterPool,
 	fetchCurrentApr
 } from './lottery';

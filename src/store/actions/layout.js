@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
 
+const BigNumber = require('bignumber.js');
+
 // GET USER ADDRESS
 
 export const fetchAddress = (web3) => {
@@ -31,19 +33,48 @@ export const fetchAddressFailed = (error) => {
 
 // GET USER BALANCE
 
-export const fetchBalance = (fm) => {
+export const fetchBalance = (web3, address) => {
 	return dispatch => {
+		// their balances call isn't returning the token balance for some reason
 		// Get user balance (includes ERC20 tokens as well)
-		fm.user.getBalances()
-			.then((balances) => {
-				let ethBalance = balances.find((e) => {
-					return e.crypto_currency === 'ETH';
+		// fm.user.getBalances()
+		// 	.then((balances) => {
+		// 		// Was ETH balance
+		// 		let ethBalance = balances.find((e) => {
+		// 			return e.crypto_currency === 'ETH';
+		// 		});
+		// 		let balance = ethBalance.crypto_amount_display + ' ETH';
+		// 		// Need Dai balance
+		// 		let theBalance = 0;
+		// 		for (var i=0; i<balances.length; i++) {
+		// 			console.log(balances[i].crypto_currency)
+		// 			if (balances[i].contract_address === process.env.REACT_APP_DAI_CONTRACT_ADDRESS) {
+		// 				theBalance = balances[i].crypto_amount_display;
+		// 			}
+		// 		}
+		// 		console.log(theBalance + ' Dai');
+		// 		dispatch(fetchBalanceSuccess(balances));
+		// 	})
+		// 	.catch((err) => {
+		// 		dispatch(fetchBalanceFailed(err));
+		// 	});
+	   
+		web3.eth.getAccounts().then((accounts) => {
+			let account = accounts[0].substring(2); // strip 0x from beginning	
+			let data = ('0x70a08231000000000000000000000000' + account);
+			
+			web3.eth.call({
+				to: process.env.REACT_APP_DAI_CONTRACT_ADDRESS,
+				data: data}) // balanceOf('address')
+				.then((balance) => {
+					balance = web3.utils.hexToNumberString(balance);
+					let baseTen = new BigNumber(10)
+					balance = balance * baseTen.exponentiatedBy(-18);
+					dispatch(fetchBalanceSuccess(balance));
+				})
+				.catch((error) => {
+					dispatch(fetchBalanceFailed(error));
 				});
-				let balance = ethBalance.crypto_amount_display + ' ETH';
-				dispatch(fetchBalanceSuccess(balance));
-			})
-			.catch((err) => {
-				dispatch(fetchBalanceFailed(err));
 			});
 	}
 }

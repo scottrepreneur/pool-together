@@ -46,8 +46,8 @@ class Layout extends Component {
 			account: accounts[0]
 		});
 		if (this.state.account) {
-			this.props.onFetchAddress(web3);
-			this.props.onFetchBalance(fm);
+			this.props.onFetchAddress(window.web3);
+			this.props.onFetchBalance(window.web3, this.props.address);
 			this.props.onFetchNetwork(window.web3);
 		}
 	}
@@ -58,7 +58,7 @@ class Layout extends Component {
 		const is_logged_in = await this.fm.user.isLoggedIn();
 		if (is_logged_in) {
 			this.props.onFetchAddress(window.web3);
-			this.props.onFetchBalance(this.fm);
+			this.props.onFetchBalance(window.web3, this.props.address);
 			this.props.onFetchNetwork(window.web3);
 		}
 	}
@@ -104,7 +104,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		onFetchAddress: (web3) => dispatch(actions.fetchAddress(web3)),
-		onFetchBalance: (fm) => dispatch(actions.fetchBalance(fm)),
+		onFetchBalance: (web3, address) => dispatch(actions.fetchBalance(web3, address)),
 		onFetchNetwork: (web3) => dispatch(actions.fetchNetwork(web3))
 	}
 }

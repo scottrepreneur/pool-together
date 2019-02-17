@@ -45,6 +45,22 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false
 			});
+		case actionTypes.CHECK_DAI_ALLOWANCE_SUCCESS:
+			return updateObject(state, {
+				allowance: action.allowance,
+				error: false,
+				loading: false
+            });
+        case actionTypes.CHECK_DAI_ALLOWANCE_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+        case actionTypes.ENTER_POOL_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
 		case actionTypes.FETCH_ENTRIES_SUCCESS:
 			return updateObject(state, {
 				entries: action.entries,

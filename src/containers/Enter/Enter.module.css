@@ -9,3 +9,9 @@
 .Enter h2 {
     padding-top: 50px;
 }
+
+.Enter input {
+    margin: auto;
+    height: 35px;
+    width: 250px;
+}

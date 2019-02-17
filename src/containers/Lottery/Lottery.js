@@ -15,6 +15,7 @@ class Lottery extends Component {
         this.props.onFetchTimeStopSplash(window.web3);
         this.props.onFetchCurrentPool(window.web3);
         this.props.onFetchCurrentApr();
+        this.props.onCheckDaiAllowance(window.web3);
     }
 
     onEnterHandler = () => {
@@ -24,15 +25,17 @@ class Lottery extends Component {
     render () {
         let lotteryValue = 0;
         if (this.props.currentApr && this.props.currentPool) {
-            lotteryValue = this.props.currentApr / 365 * this.state.daysSaving * this.props.currentPool
+            lotteryValue = Number(this.props.currentApr / 100 / 365 * this.state.daysSaving * this.props.currentPool).toFixed(2);
         }
+        let apr = Number(this.props.currentApr).toFixed(2);
+        let currentPool = Number(this.props.currentPool).toFixed(2);
         return (
             <div className={classes.Lottery}>
                 <h2>A Lottery You Can't Lose!</h2>
                 <div className={classes.LotteryStats}>
                     <div className={classes.Pot}>
-                        <p>{lotteryValue} <span>ETH</span></p>
-                        <h3>Current Lottery Value</h3>
+                        <p>{lotteryValue} <span>Dai</span></p>
+                        <h3>Estimated Winnings</h3>
                     </div>
                     <div className={classes.TimeRemaining}>
                         <p>{this.props.timeStopSplash} <span>Hours</span></p>
@@ -46,8 +49,8 @@ class Lottery extends Component {
                     <p>Learn More</p>
                 </div>
                 <div>
-                    <p>Current Principal: {this.props.currentPool}</p>
-                    <p>APR: {this.props.currentApr}</p>
+                    <p>Current Principal: {currentPool}</p>
+                    <p>APR: {apr}%</p>
                 </div>
             </div>
             
@@ -60,7 +63,8 @@ const mapStateToProps = state => {
         poolState: state.lottery.poolState,
         timeStopSplash: state.lottery.timeStopSplash,
         currentPool: state.lottery.currentPool,
-        currentApr: state.lottery.currentApr
+        currentApr: state.lottery.currentApr,
+        allowance: state.lottery.allowance
 	}
 }
 
@@ -69,7 +73,8 @@ const mapDispatchToProps = dispatch => {
         onFetchPoolState: (web3) => dispatch(actions.fetchPoolState(web3)),
         onFetchTimeStopSplash: (web3) => dispatch(actions.fetchTimeStopSplash(web3)),
         onFetchCurrentPool: (web3) => dispatch(actions.fetchCurrentPool(web3)),
-        onFetchCurrentApr: () => dispatch(actions.fetchCurrentApr())
+        onFetchCurrentApr: () => dispatch(actions.fetchCurrentApr()),
+        onCheckDaiAllowance: (web3) => dispatch(actions.checkDaiAllowance(web3))
 	}
 }
 

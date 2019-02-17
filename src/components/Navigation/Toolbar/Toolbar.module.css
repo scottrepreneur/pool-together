@@ -16,11 +16,11 @@
 
 .DesktopOnly {
 	width: 300px;
+	padding-top: 25px;
 }
 
 .DesktopOnly a {
 	float: left;
-	margin-top: 35px;
 }
 
 @media (max-width: 499px) {

@@ -14,13 +14,13 @@ const walletInfo = (props) => {
     if (props.network && props.address && props.balance) {
         let _address = props.address.toString()
         let address = _address.substring(_address.length - 8, _address.length);
-        wallet = props.network + ' ' + address + ' ' + props.balance
+        wallet = props.network + ' ' + address + ' ' + props.balance.toFixed(2) + ' Dai'
     }
 
 	return (
-		<div className={classes.WalletInfo}>
+		<span className={classes.WalletInfo}>
             {wallet}
-        </div>
+        </span>
 	);
 }
 
