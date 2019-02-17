@@ -5,6 +5,7 @@ import classes from './Toolbar.module.css';
 import Logo from '../../Logo/Logo';
 import WalletInfo from '../WalletInfo/WalletInfo';
 import SidebarToggle from '../Sidebar/SidebarToggle/SidebarToggle';
+import NavigationItems from '../NavigationItems/NavigationItems';
 
 const toolbar = (props) => (
 	<header className={classes.Toolbar}>
@@ -16,6 +17,7 @@ const toolbar = (props) => (
 			</NavLink>
 		</div>
 		<nav className={classes.DesktopOnly}>
+			<NavLink to="/entries" >My Entry</NavLink>
 			<WalletInfo
 				loginClick = {(web3, fm) => props.loginClick(web3, fm)}
 				web3={props.web3}

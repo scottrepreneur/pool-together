@@ -1,13 +1,13 @@
 export {
 	fetchAddress,
-	fetchAddressFailed,
 	fetchBalance,
-	fetchBalanceFailed,
 	fetchNetwork,
-	fetchNetworkFailed,
 } from './layout';
 export {
+	fetchPoolState,
 	fetchTimeStopSplash,
-	fetchCurrentPot,
+	fetchCurrentPool,
+	fetchEntries,
 	enterPool,
+	fetchCurrentApr
 } from './lottery';

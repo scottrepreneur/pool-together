@@ -14,6 +14,15 @@
 	height: 80%;
 }
 
+.DesktopOnly {
+	width: 300px;
+}
+
+.DesktopOnly a {
+	float: left;
+	margin-top: 35px;
+}
+
 @media (max-width: 499px) {
 	.DesktopOnly {
 		display: none;
