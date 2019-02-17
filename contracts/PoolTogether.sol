@@ -23,6 +23,8 @@ contract PoolTogether {
     creationTime = now;
   }
 
+
+
   //States of Contract:
   //PoolOpen: Accepting
   //Saving: and Earning
@@ -43,22 +45,46 @@ contract PoolTogether {
     _;
   }
 
+  //Time Variables (cumulative)
+  uint freeSwim = 2 minutes;
+  uint treadWater = freeSwim + 5 minutes;
+  uint outOfPool = outOfPool + 3 minutes;
+
+  // Perform timed transitions. Be sure to mention
+  // this modifier first, otherwise the guards
+  // will not take the new stage into account.
+  modifier timedTransitions() {
+    if (state == States.PoolOpen &&
+      now >= creationTime + freeSwim)
+      earnInterest();
+    if (state == States.Saving &&
+      now >= creationTime + treadWater)
+      pickWinner();
+    if (state == States.PayOut &&
+      now >= creationTime + outOfPool)
+      restartPool();
+      // The other stages transition by transaction
+        _;
+  }
+
 
   // Event emitted when a saver dives into the pool
-  event Splash(address indexed saver, uint deposit, uint total);
+  event splashDown(address indexed saver, uint deposit, uint total);
 
   // Event emitted when a saver withdraws
-  event Withdraw(address indexed saver, uint savings);
+  event takeHome(address indexed saver, uint savings);
+
+  event Saving(States state);
 
     //When a saver joins the pool
     //Saver can add to deposit during PoolOpen
-    function splash() public payable atState(States.PoolOpen) {
+    function splash() public payable timedTransitions atState(States.PoolOpen) {
         //For use w/ DAI Tokens: require(transferFrom(msg.sender, address(this), deposit), "DRAW_FAILED");
         require(msg.value >= min);
         addEntrant(msg.sender);
         pool = pool + msg.value;
         savings[msg.sender] = savings[msg.sender] + msg.value;
-        emit Splash(msg.sender, msg.value, savings[msg.sender]);
+        emit splashDown(msg.sender, msg.value, savings[msg.sender]);
     }
 
     //Add enntrant to pool of potential winners
@@ -71,23 +97,42 @@ contract PoolTogether {
         //Else: Already an active key
     }
 
-    function checkDups() private {
+    function checkDups() internal {
       // Check for duplicate addresses in entrants?
+    }
+
+    function nextStage() internal {
+        state = States(uint(state) + 1);
+    }
+
+    function earnInterest() internal {
+      //Earn Interest
+      nextStage();
+      emit Saving(state);
+    }
+
+    function pickWinner() internal {
+      //Pick the Winner
+      nextStage();
+    }
+
+    function restartPool() internal {
+      creationTime = now;
+      state = States(uint(0));
     }
 
     //Withdraw, only during PayOut period
     //Question: Do we pull the funds from earning source each iteration?
     // Or do we only pull funds that are requested (maximizing roll-over)?
-    function withdraw() public atState(States.PayOut) {
+    function withdraw() public timedTransitions atState(States.PayOut) {
           uint amount = savings[msg.sender];
           pool = pool - amount;
           // !re-entrancy : Zero the pending refund before
           savings[msg.sender] = 0;
           msg.sender.transfer(amount);
           removeSaver();
+          emit takeHome(msg.sender, amount);
       }
-
-
 
   function removeSaver() private {
       //Copy last entry to slot occupied by withdrawing address
