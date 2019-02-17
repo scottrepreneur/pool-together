@@ -103,6 +103,10 @@ contract PoolTogether {
         require(token.balanceOf(msg.sender) >= amtDai && token.allowance(msg.sender, address(this)) >= amtDai);
         token.approve(address(daiContract), amtDai);
         token.transferFrom(msg.sender, address(this), amtDai);
+        addEntrant(msg.sender);
+        pool = pool + amtDai;
+        savings[msg.sender] = savings[msg.sender] + amtDai;
+        emit splashDown(msg.sender, amtDai, savings[msg.sender]);
         return amtDai;
     }
 
@@ -135,18 +139,25 @@ contract PoolTogether {
         state = States(uint(state) + 1);
     }
 
-    function earnInterest() internal {
+    function earnInterest(uint daisend) public {
       //Earn Interest
-      nextStage();
+      require(msg.sender == owner);
+      //nextStage();
       emit Saving(state);
-      token.approve(0x3FDA67f7583380E67ef93072294a7fAc882FD7E7, 100);
-      uint errorCode = moneyMarket.supply(daiContract, 100);
+      token.approve(0x3FDA67f7583380E67ef93072294a7fAc882FD7E7, daisend);
+      uint errorCode = moneyMarket.supply(daiContract, daisend);
       assert(errorCode == 0);
     }
 
-    function pickWinner() internal {
+    function pickWinner() public returns (address) {
       //Pick the Winner
-      nextStage();
+      address winner = entrants[1];
+      uint currentSupplyBalance = moneyMarket.getSupplyBalance(address(this),daiContract);
+      // assert user's account has a non-zero supply
+      assert(currentSupplyBalance >= 0);
+      uint interest = currentSupplyBalance - pool;
+      return winner;
+      //nextStage();
     }
 
     function restartPool() internal {
@@ -166,6 +177,16 @@ contract PoolTogether {
           removeSaver();
           emit takeHome(msg.sender, amount);
       }
+
+    function withdrawDai() public atState(States.PayOut) {
+        uint amount = savings[msg.sender];
+        pool = pool - amount;
+        // !re-entrancy : Zero the pending refund before
+        savings[msg.sender] = 0;
+        token.transfer(msg.sender, amount);
+        removeSaver();
+        emit takeHome(msg.sender, amount);
+    }
 
   function removeSaver() private {
       //Copy last entry to slot occupied by withdrawing address
