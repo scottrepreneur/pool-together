@@ -168,12 +168,13 @@ contract PoolTogether {
 
 
       //Get Random Number from RhombusNetwork lighthouse-local
-      /*
       uint winningNumber;
+      /*
       bool ok;
       (winningNumber,ok) = myLighthouse.peekData(); // obtain random number from Rhombus Lighthouse
+      winningNumber = winningNumber * now;
       */
-      uint winningNumber = 131 % entrants.length;
+      winningNumber = 131 % entrants.length;
 
       //Pick the Winner
       address winner = entrants[winningNumber];
