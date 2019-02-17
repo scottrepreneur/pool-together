@@ -1,6 +1,8 @@
 pragma solidity ^0.5.0;
 import 'https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 import 'https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol';
+//import 'https://github.com/RhombusNetwork/lighthouse-local/blob/master/contracts/Lighthouse.sol';
+//import 'https://github.com/RhombusNetwork/lighthouse-local/blob/master/contracts/Ilighthouse.sol';
 
 // Interface for compound MoneyMarket
 interface MoneyMarket {
@@ -17,6 +19,10 @@ contract PoolTogether {
 
   address public owner;
   address daiContract;
+
+  //Get Lighthouse from RhombusNetwork
+  //ILighthouse  public myLighthouse;        // Lighthouse to obtain a random number
+
 
   // The compound market for this pool
   MoneyMarket moneyMarket = MoneyMarket(0x3FDA67f7583380E67ef93072294a7fAc882FD7E7);
@@ -150,12 +156,33 @@ contract PoolTogether {
     }
 
     function pickWinner() public returns (address) {
-      //Pick the Winner
-      address winner = entrants[1];
+
       uint currentSupplyBalance = moneyMarket.getSupplyBalance(address(this),daiContract);
       // assert user's account has a non-zero supply
       assert(currentSupplyBalance >= 0);
+
+      // Withdraw funds from Compound
+      // Ensure you have a balance which was supplied, see `supply` above
+      uint errorCode = moneyMarket.withdraw(daiContract, currentSupplyBalance);
+      assert(errorCode == 0);
+
+
+      //Get Random Number from RhombusNetwork lighthouse-local
+      /*
+      uint winningNumber;
+      bool ok;
+      (winningNumber,ok) = myLighthouse.peekData(); // obtain random number from Rhombus Lighthouse
+      */
+      uint winningNumber = 131 % entrants.length;
+
+      //Pick the Winner
+      address winner = entrants[winningNumber];
+
       uint interest = currentSupplyBalance - pool;
+
+      //Allocate Interest to winner
+      savings[winner] = savings[winner] + interest;
+
       return winner;
       //nextStage();
     }
