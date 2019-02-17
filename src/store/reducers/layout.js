@@ -2,39 +2,49 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
 
 const initialState = {
-	currentPot: null,
-    timeStopSplash: null,
-    timeStopSave: null,
-    timeStopPayout: null,
+	address: null,
+	network: null,
+	balance: null,
 	loading: true,
 	error: false
 }
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
-    	case actionTypes.FETCH_TIME_STOP_SPLASH_SUCCESS:
+		case actionTypes.FETCH_ADDRESS_SUCCESS:
 			return updateObject(state, {
-				timeStopSplash: action.timeStopSplash,
+				address: action.address,
 				error: false,
 				loading: false
             });
-        case actionTypes.FETCH_TIME_STOP_SPLASH_FAILED:
-			return updateObject(state, {
-				error: action.error,
-				loading: false
-            });
-        case actionTypes.FETCH_CURRENT_POT_SUCCESS:
-			return updateObject(state, {
-				currentPot: action.currentPot,
-				error: false,
-				loading: false
-            });
-        case actionTypes.FETCH_CURRENT_POT_FAILED:
+        case actionTypes.FETCH_ADDRESS_FAILED:
 			return updateObject(state, {
 				error: action.error,
 				loading: false
 			});
-
+		case actionTypes.FETCH_BALANCE_SUCCESS:
+			return updateObject(state, {
+				balance: action.balance,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_BALANCE_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.FETCH_NETWORK_SUCCESS:
+			return updateObject(state, {
+				network: action.network,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_NETWORK_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+        		
 		default:
 			return state;
 	}

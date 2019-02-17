@@ -8,12 +8,14 @@ import thunk from 'redux-thunk';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import layoutReducer from './store/reducers/layout';
 import lotteryReducer from './store/reducers/lottery';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
-  lottery: lotteryReducer,
+  layout: layoutReducer,
+  lottery: lotteryReducer
 });
 
 let store = createStore(rootReducer, composeEnhancers(

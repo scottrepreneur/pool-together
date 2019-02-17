@@ -21,7 +21,8 @@ const toolbar = (props) => (
 				web3={props.web3}
 				fm={props.fm}
 				address={props.address}
-				balance={props.balance} 
+				balance={props.balance}
+				network={props.network} 
 			/>
 		</nav>
 	</header>
