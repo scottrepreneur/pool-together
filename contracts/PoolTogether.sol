@@ -53,19 +53,24 @@ contract PoolTogether {
   // Perform timed transitions. Be sure to mention
   // this modifier first, otherwise the guards
   // will not take the new stage into account.
+  /*
   modifier timedTransitions() {
     if (state == States.PoolOpen &&
-      now >= creationTime + freeSwim)
+      now >= creationTime + freeSwim) {
       earnInterest();
+    }
     if (state == States.Saving &&
-      now >= creationTime + treadWater)
+      now >= creationTime + treadWater) {
       pickWinner();
+    }
     if (state == States.PayOut &&
-      now >= creationTime + outOfPool)
+      now >= creationTime + outOfPool) {
       restartPool();
+    }
       // The other stages transition by transaction
         _;
   }
+  */
 
 
   // Event emitted when a saver dives into the pool
@@ -78,7 +83,7 @@ contract PoolTogether {
 
     //When a saver joins the pool
     //Saver can add to deposit during PoolOpen
-    function splash() public payable timedTransitions atState(States.PoolOpen) {
+    function splash() public payable atState(States.PoolOpen) {
         //For use w/ DAI Tokens: require(transferFrom(msg.sender, address(this), deposit), "DRAW_FAILED");
         require(msg.value >= min);
         addEntrant(msg.sender);
@@ -124,7 +129,7 @@ contract PoolTogether {
     //Withdraw, only during PayOut period
     //Question: Do we pull the funds from earning source each iteration?
     // Or do we only pull funds that are requested (maximizing roll-over)?
-    function withdraw() public timedTransitions atState(States.PayOut) {
+    function withdraw() public atState(States.PayOut) {
           uint amount = savings[msg.sender];
           pool = pool - amount;
           // !re-entrancy : Zero the pending refund before
