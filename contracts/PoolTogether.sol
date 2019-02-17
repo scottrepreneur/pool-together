@@ -1,10 +1,26 @@
 pragma solidity ^0.5.0;
-//import 'openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
-//import 'openzeppelin-solidity/contracts/math/SafeMath.sol';
+import 'https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol';
+import 'https://github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol';
+
+// Interface for compound MoneyMarket
+interface MoneyMarket {
+  function supply(address asset, uint amount) external returns (uint);
+  function withdraw(address asset, uint requestedAmount) external returns (uint);
+  function getSupplyBalance(address account, address asset) view external returns (uint);
+}
+
 
 contract PoolTogether {
 
+  using SafeMath for uint256;
+  ERC20 token;
+
   address public owner;
+  address daiContract;
+
+  // The compound market for this pool
+  MoneyMarket moneyMarket = MoneyMarket(0x3FDA67f7583380E67ef93072294a7fAc882FD7E7);
+
   uint public creationTime;
   address[] public entrants;
   //address[] private entrants;
@@ -16,9 +32,11 @@ contract PoolTogether {
   uint pool = 0;
   uint min = 10 finney;
 
-  constructor () public {
+  constructor (address daiAddress) public {
     //address compoundFinanceMM = "0x3fda67f7583380e67ef93072294a7fac882fd7e7"
-    //address public rinkDai = "0x4e17c87c52d0e9a0cad3fbc53b77d9514f003807";
+    //rinkDai = 0x4e17c87c52d0e9a0cad3fbc53b77d9514f003807;
+    daiContract = daiAddress;
+    token = ERC20(daiAddress);
     owner = msg.sender;
     creationTime = now;
   }
@@ -73,18 +91,25 @@ contract PoolTogether {
   */
 
 
-  // Event emitted when a saver dives into the pool
-  event splashDown(address indexed saver, uint deposit, uint total);
+    // Event emitted when a saver dives into the pool
+    event splashDown(address indexed saver, uint deposit, uint total);
 
-  // Event emitted when a saver withdraws
-  event takeHome(address indexed saver, uint savings);
+    // Event emitted when a saver withdraws
+    event takeHome(address indexed saver, uint savings);
 
-  event Saving(States state);
+    event Saving(States state);
+
+    function splashDai(uint amtDai) external returns (uint) {
+        require(token.balanceOf(msg.sender) >= amtDai && token.allowance(msg.sender, address(this)) >= amtDai);
+        token.approve(address(daiContract), amtDai);
+        token.transferFrom(msg.sender, address(this), amtDai);
+        return amtDai;
+    }
 
     //When a saver joins the pool
     //Saver can add to deposit during PoolOpen
     function splash() public payable atState(States.PoolOpen) {
-        //For use w/ DAI Tokens: require(transferFrom(msg.sender, address(this), deposit), "DRAW_FAILED");
+
         require(msg.value >= min);
         addEntrant(msg.sender);
         pool = pool + msg.value;
@@ -114,6 +139,9 @@ contract PoolTogether {
       //Earn Interest
       nextStage();
       emit Saving(state);
+      token.approve(0x3FDA67f7583380E67ef93072294a7fAc882FD7E7, 100);
+      uint errorCode = moneyMarket.supply(daiContract, 100);
+      assert(errorCode == 0);
     }
 
     function pickWinner() internal {
