@@ -2,28 +2,32 @@ import * as actionTypes from '../actions/actionTypes';
 import axios from '../../axios-graph';
 
 const BigNumber = require('bignumber.js');
+let baseTen = new BigNumber(10)
+
+const lotteryAddress = process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
+const lotteryAbi = [{"constant":false,"inputs":[],"name":"splash","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"myDeposit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"poolSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pickWinner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"stateOfPool","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryData","outputs":[{"name":"Entries","type":"uint256"},{"name":"Size","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolReturn","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amtDai","type":"uint256"}],"name":"splashDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stateVar","type":"uint256"}],"name":"setState","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"creationTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawDai","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"entrants","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"daisend","type":"uint256"}],"name":"earnInterest","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"daiAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"deposit","type":"uint256"},{"indexed":false,"name":"total","type":"uint256"}],"name":"splashDown","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"savings","type":"uint256"}],"name":"takeHome","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"state","type":"uint8"}],"name":"Saving","type":"event"}]
+
+const daiAddress = process.env.REACT_APP_DAI_CONTRACT_ADDRESS
+const daiAbi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]
 
 // FETCH POOL STATUS
 
 export const fetchPoolState = (web3) => {
     return dispatch => {
-        web3.eth.call({
-                to: process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS,
-                data: '0x7b9e152e'}) // stateOfPool()
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        lottery.methods.stateOfPool().call()
             .then((poolState) => {
-                // calculate time from block
-                console.log(poolState);
-                dispatch(fetchPoolStateSuccess("0"));
+                dispatch(fetchPoolStateSuccess(poolState));
             }).catch((error) => {
                 dispatch(fetchPoolStateFailed(error))
             });
     }
 }
 
-export const fetchPoolStateSuccess = (time) => {
+export const fetchPoolStateSuccess = (state) => {
     return {
 		type: actionTypes.FETCH_POOL_STATE_SUCCESS,
-		timeStopSplash: time
+		poolState: state
 	};
 }
 
@@ -69,9 +73,8 @@ export const fetchTimeStopSplashFailed = (error) => {
 
 export const fetchCurrentPool = (web3) => {
     return dispatch => {
-        web3.eth.call({
-                to: process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS,
-                data: '0x4ec18db9'}) // poolSize()
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        lottery.methods.poolSize().call()
             .then((poolSize) => {
                 // adjust pool size?
                 poolSize = Number(web3.utils.fromWei(web3.eth.abi.decodeParameter('uint256', poolSize), 'ether'));
@@ -100,17 +103,17 @@ export const fetchCurrentPoolFailed = (error) => {
 
 export const checkDaiAllowance = (web3) => {
     return dispatch => {
+        const dai = new web3.eth.Contract(daiAbi, daiAddress);
+        
         web3.eth.getAccounts().then((accounts) => {
-            let account = accounts[0].substring(2);
-            let data = ('0xde242ff4000000000000000000000000' + account);
-
-            web3.eth.call({
-				to: process.env.REACT_APP_DAI_CONTRACT_ADDRESS,
-				data: data})
+            dai.methods.allowance(
+                accounts[0],
+                process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
+            ).call()
 				.then((allowance) => {
                     console.log(allowance);
 					allowance = web3.utils.hexToNumberString(allowance);
-					let baseTen = new BigNumber(10)
+					
 					allowance = allowance * baseTen.exponentiatedBy(-18);
 					dispatch(checkDaiAllowanceSuccess(allowance));
 				})
@@ -139,10 +142,7 @@ export const checkDaiAllowanceFailed = (error) => {
 
 export const approveDai = (web3) => {
     return dispatch => {
-		const erc20TokenContractAbi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amount","type":"uint256"}],"name":"withdrawEther","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"_totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeSub","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeDiv","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeMul","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenAddress","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferAnyERC20Token","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"a","type":"uint256"},{"name":"b","type":"uint256"}],"name":"safeAdd","outputs":[{"name":"c","type":"uint256"}],"payable":false,"stateMutability":"pure","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
-
-        // Instantiate contract
-        const tokenContract = new web3.eth.Contract(erc20TokenContractAbi, process.env.REACT_APP_DAI_CONTRACT_ADDRESS);
+		const dai = new web3.eth.Contract(daiAbi, daiAddress);
 
         // Calculate contract compatible value for approve with proper decimal points using BigNumber
         const tokenDecimals = web3.utils.toBN(18);
@@ -152,7 +152,7 @@ export const approveDai = (web3) => {
         // Get user account wallet address first
         web3.eth.getAccounts().then((accounts) => {
         // Send ERC20 transaction with web3
-            tokenContract.methods.approve(
+            dai.methods.approve(
                 process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS, 
                 calculatedApproveValue
             ).send({from: accounts[0]})
@@ -179,26 +179,45 @@ export const approveDaiFailed = (error) => {
 	};
 }
 
-// GET ENTER POOL
+// ENTER POOL WITH ETHER
 
-export const enterPool = (web3, entryAmount) => {
+export const enterEthPool = (web3, entryAmount) => {
     return dispatch => {
-        const contractAddress = process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS;
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
         const value = web3.utils.toWei(entryAmount, 'finney')
         web3.eth.getAccounts().then((accounts) => {
-            web3.eth.sendTransaction({
+            lottery.methods.splash().send({
                 value: value,
                 from: accounts[0],
-                to: contractAddress,
-                data: '0x12f4d4aa' // splash()
             })
                 .once('transactionHash', (hash) => { console.log(hash); })
                 .once('receipt', (receipt) => { 
                     console.log(receipt); 
                     dispatch(enterPoolSuccess());
+                    console.log("enter!");
                 });
         });
-        console.log("enter!");
+        
+    }
+}
+
+// ENTER POOL WITH DAI
+
+export const enterDaiPool = (web3, entryAmount) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.splashDai(entryAmount * baseTen.exponentiatedBy(18)).send({
+                from: accounts[0],
+            })
+                .once('transactionHash', (hash) => { console.log(hash); })
+                .once('receipt', (receipt) => { 
+                    console.log(receipt); 
+                    dispatch(enterPoolSuccess());
+                    console.log("enter!");
+                });
+        });
+        
     }
 }
 
@@ -219,10 +238,8 @@ export const enterPoolFailed = (error) => {
 
 export const fetchEntries = (web3, account) => {
     return dispatch => {
-        web3.eth.call({
-            to: process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS,
-            data: '0x2a096397'}) // myDeposit()
-            // data: web3.eth.abi.encodeParameter("string", "myDeposit()")}) // myDeposit()
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        lottery.methods.myDeposit().call()
         .then((deposit) => {
             let myDeposit = web3.utils.fromWei(web3.eth.abi.decodeParameter('uint256', deposit), 'finney');
             dispatch(fetchEntriesSuccess(myDeposit));
@@ -248,7 +265,7 @@ export const fetchEntriesFailed = (error) => {
 
 // GET CURRENT APR
 
-export const fetchCurrentApr = (web3, account) => {
+export const fetchCurrentApr = () => {
     return dispatch => {
         
         const graph_query = `{ 

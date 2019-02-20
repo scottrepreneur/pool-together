@@ -34,7 +34,7 @@ class Enter extends Component {
     onEnterPoolHandler = () => {
 		// Handle Splash Contract call
 		if (this.props.allowance > 0) {
-			this.props.onEnterPool(window.web3, "10");
+			this.props.onEnterPool(window.web3, this.state.controls.poolAmount.value);
 		} else {
 			this.props.onApproveDai(window.web3);
 		}
@@ -99,7 +99,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-		onEnterPool: (web3, amount) => dispatch(actions.enterPool(web3, amount)),
+		onEnterPool: (web3, amount) => dispatch(actions.enterDaiPool(web3, amount)),
 		onCheckDaiAllowance: (web3) => dispatch(actions.checkDaiAllowance(web3)),
 		onApproveDai: (web3) => dispatch(actions.approveDai(web3))
 	}

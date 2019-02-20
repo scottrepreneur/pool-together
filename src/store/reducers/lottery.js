@@ -12,7 +12,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
-    	case actionTypes.FETCH_TIME_STOP_SPLASH_SUCCESS:
+		case actionTypes.FETCH_POOL_STATE_SUCCESS:
+			return updateObject(state, {
+				poolState: action.poolState,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_POOL_STATE_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+            });
+		case actionTypes.FETCH_TIME_STOP_SPLASH_SUCCESS:
 			return updateObject(state, {
 				timeStopSplash: action.timeStopSplash,
 				error: false,

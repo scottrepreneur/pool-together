@@ -10,6 +10,7 @@ export {
 	fetchEntries,
 	checkDaiAllowance,
 	approveDai,
-	enterPool,
+	enterEthPool,
+	enterDaiPool,
 	fetchCurrentApr
 } from './lottery';
