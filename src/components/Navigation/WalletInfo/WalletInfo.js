@@ -1,26 +1,39 @@
 import React from 'react';
 
+import Aux from '../../../hoc/Aux/Aux';
 import classes from './WalletInfo.module.css';
 import Button from '../../UI/Button/Button';
 
 const walletInfo = (props) => {
+    let networkClasses = [classes.NetworkCircle, classes.MainnetCircle]
+    if (props.network === 4) {
+        networkClasses = [classes.NetworkCircle, classes.RinkebyCircle]
+    }
+    
     let wallet = (
-        <Button 
-            btnType="WalletInfo"   
-            clicked={() => props.loginClick(props.web3, props.fm)}>
-            Login
-        </Button>
+        <Aux>
+            <Button 
+                btnType="WalletInfo"   
+                clicked={() => props.loginClick(props.web3, props.fm)}>
+                Login
+            </Button>
+        </Aux>
     );
-    if (props.network && props.address && props.balance) {
+    if (props.network && props.address) {
         let _address = props.address.toString()
         let address = _address.substring(_address.length - 8, _address.length);
-        wallet = props.network + ' ' + address + ' ' + props.balance.toFixed(2) + ' Dai'
+        wallet = (
+        <div className={classes.WalletInfo}>
+            <div className={networkClasses.join(" ")}></div>
+            <div className={classes.Address}>{address}</div>
+        </div>
+        ) 
     }
 
 	return (
-		<span className={classes.WalletInfo}>
+        <Aux>
             {wallet}
-        </span>
+        </Aux>
 	);
 }
 

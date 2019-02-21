@@ -1,16 +1,26 @@
 export {
 	fetchAddress,
-	fetchBalance,
+	fetchDaiBalance,
+	fetchEthBalance,
 	fetchNetwork,
 } from './layout';
 export {
+	// information
 	fetchPoolState,
 	fetchTimeStopSplash,
 	fetchCurrentPool,
+	fetchDeposit,
 	fetchEntries,
+	fetchCurrentApr,
+	fetchEntrants,
+	// actions
 	checkDaiAllowance,
 	approveDai,
 	enterEthPool,
 	enterDaiPool,
-	fetchCurrentApr
+	withdrawEther,
+	withdrawDai,
 } from './lottery';
+export {
+	setPoolState,
+} from './manage';

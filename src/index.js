@@ -10,12 +10,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import layoutReducer from './store/reducers/layout';
 import lotteryReducer from './store/reducers/lottery';
+import manageReducer from './store/reducers/manage';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
   layout: layoutReducer,
-  lottery: lotteryReducer
+  lottery: lotteryReducer,
+  manage: manageReducer
 });
 
 let store = createStore(rootReducer, composeEnhancers(

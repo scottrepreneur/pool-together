@@ -47,18 +47,34 @@ class Layout extends Component {
 		});
 		if (this.state.account) {
 			this.props.onFetchAddress(window.web3);
-			this.props.onFetchBalance(window.web3, this.props.address);
+			this.props.onFetchDaiBalance(window.web3, this.props.address);
 			this.props.onFetchNetwork(window.web3);
 		}
 	}
 
 	async componentWillMount () {
 		this.fm = new Fortmatic(process.env.REACT_APP_FORTMATIC_API_KEY);
-		window.web3 = new Web3(this.fm.getProvider());
+		// Post EIP-1102 update which MetaMask no longer injects web3
+		if (window.ethereum) {
+			// Use MetaMask provider
+			window.web3 = new Web3(window.ethereum);
+		} else {
+			// Use Fortmatic provider
+			window.web3 = new Web3(this.fm.getProvider());
+		}
+		
+		// Legacy dApp browsers which web3 is still being injected
+		if (typeof window.web3 !== 'undefined') {
+			// Use injected provider
+			window.web3 = new Web3(window.web3.currentProvider);
+		} else {
+			// Use Fortmatic provider
+			window.web3 = new Web3(this.fm.getProvider());
+		}
 		const is_logged_in = await this.fm.user.isLoggedIn();
 		if (is_logged_in) {
 			this.props.onFetchAddress(window.web3);
-			this.props.onFetchBalance(window.web3, this.props.address);
+			this.props.onFetchDaiBalance(window.web3, this.props.address);
 			this.props.onFetchNetwork(window.web3);
 		}
 	}
@@ -104,7 +120,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
 	return {
 		onFetchAddress: (web3) => dispatch(actions.fetchAddress(web3)),
-		onFetchBalance: (web3, address) => dispatch(actions.fetchBalance(web3, address)),
+		onFetchDaiBalance: (web3, address) => dispatch(actions.fetchDaiBalance(web3, address)),
 		onFetchNetwork: (web3) => dispatch(actions.fetchNetwork(web3))
 	}
 }

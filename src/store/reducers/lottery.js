@@ -2,16 +2,20 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
 
 const initialState = {
-	currentPot: null,
+	currentPot: 0,
+	entrants: 0,
+	deposit: 0,
     timeStopSplash: null,
     timeStopSave: null,
-    timeStopPayout: null,
+	timeStopPayout: null,
 	loading: true,
 	error: false
 }
 
 const reducer = (state = initialState, action) => {
 	switch (action.type) {
+		
+		// INFORMATION STATES
 		case actionTypes.FETCH_POOL_STATE_SUCCESS:
 			return updateObject(state, {
 				poolState: action.poolState,
@@ -33,8 +37,8 @@ const reducer = (state = initialState, action) => {
 			return updateObject(state, {
 				error: action.error,
 				loading: false
-            });
-        case actionTypes.FETCH_CURRENT_POOL_SUCCESS:
+			});
+		case actionTypes.FETCH_CURRENT_POOL_SUCCESS:
 			return updateObject(state, {
 				currentPool: action.currentPool,
 				error: false,
@@ -56,18 +60,13 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false
 			});
-		case actionTypes.CHECK_DAI_ALLOWANCE_SUCCESS:
+		case actionTypes.FETCH_DEPOSIT_SUCCESS:
 			return updateObject(state, {
-				allowance: action.allowance,
+				deposit: action.deposit,
 				error: false,
 				loading: false
             });
-        case actionTypes.CHECK_DAI_ALLOWANCE_FAILED:
-			return updateObject(state, {
-				error: action.error,
-				loading: false
-			});
-        case actionTypes.ENTER_POOL_FAILED:
+        case actionTypes.FETCH_DEPOSIT_FAILED:
 			return updateObject(state, {
 				error: action.error,
 				loading: false
@@ -79,6 +78,48 @@ const reducer = (state = initialState, action) => {
 				loading: false
             });
         case actionTypes.FETCH_ENTRIES_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.FETCH_ENTRANTS_SUCCESS:
+			return updateObject(state, {
+				entrants: action.entrants,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_ENTRANTS_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+
+		// ACTIONS
+		case actionTypes.CHECK_DAI_ALLOWANCE_SUCCESS:
+			return updateObject(state, {
+				allowance: action.allowance,
+				error: false,
+				loading: false
+            });
+        case actionTypes.CHECK_DAI_ALLOWANCE_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.ENTER_ETH_POOL_SUCCESS:
+			return updateObject(state, {
+				loading: false
+			});
+		case actionTypes.ENTER_ETH_POOL_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.ENTER_DAI_POOL_SUCCESS:
+			return updateObject(state, {
+				loading: false
+			});
+		case actionTypes.ENTER_DAI_POOL_FAILED:
 			return updateObject(state, {
 				error: action.error,
 				loading: false

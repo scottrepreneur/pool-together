@@ -76,8 +76,8 @@ export const fetchCurrentPool = (web3) => {
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
         lottery.methods.poolSize().call()
             .then((poolSize) => {
-                // adjust pool size?
-                poolSize = Number(web3.utils.fromWei(web3.eth.abi.decodeParameter('uint256', poolSize), 'ether'));
+                poolSize = Number(web3.utils.fromWei(poolSize, 'ether'));
+                // console.log(poolSize);
                 dispatch(fetchCurrentPoolSuccess(poolSize));
             }).catch((error) => {
                 dispatch(fetchCurrentPoolFailed(error));
@@ -111,7 +111,7 @@ export const checkDaiAllowance = (web3) => {
                 process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
             ).call()
 				.then((allowance) => {
-                    console.log(allowance);
+                    // console.log(allowance);
 					allowance = web3.utils.hexToNumberString(allowance);
 					
 					allowance = allowance * baseTen.exponentiatedBy(-18);
@@ -138,7 +138,7 @@ export const checkDaiAllowanceFailed = (error) => {
 	};
 }
 
-// APPROVE CONTRACT TO TRANSFERFROM DAI FOR ADDRESS
+// APPROVE CONTRACT TO TRANSFER_FROM DAI FOR ADDRESS
 
 export const approveDai = (web3) => {
     return dispatch => {
@@ -193,12 +193,25 @@ export const enterEthPool = (web3, entryAmount) => {
                 .once('transactionHash', (hash) => { console.log(hash); })
                 .once('receipt', (receipt) => { 
                     console.log(receipt); 
-                    dispatch(enterPoolSuccess());
+                    dispatch(enterEthPoolSuccess());
                     console.log("enter!");
                 });
         });
         
     }
+}
+
+export const enterEthPoolSuccess = () => {
+    return {
+		type: actionTypes.ENTER_ETH_POOL_SUCCESS,
+	};
+}
+
+export const enterEtPoolFailed = (error) => {
+    return {
+		type: actionTypes.ENTER_ETH_POOL_FAILED,
+		error: error
+	};
 }
 
 // ENTER POOL WITH DAI
@@ -213,7 +226,7 @@ export const enterDaiPool = (web3, entryAmount) => {
                 .once('transactionHash', (hash) => { console.log(hash); })
                 .once('receipt', (receipt) => { 
                     console.log(receipt); 
-                    dispatch(enterPoolSuccess());
+                    dispatch(enterDaiPoolSuccess());
                     console.log("enter!");
                 });
         });
@@ -221,44 +234,45 @@ export const enterDaiPool = (web3, entryAmount) => {
     }
 }
 
-export const enterPoolSuccess = () => {
+export const enterDaiPoolSuccess = () => {
     return {
-		type: actionTypes.ENTER_POOL_SUCCESS,
+		type: actionTypes.ENTER_DAI_POOL_SUCCESS,
 	};
 }
 
-export const enterPoolFailed = (error) => {
+export const enterDaiPoolFailed = (error) => {
     return {
-		type: actionTypes.ENTER_POOL_FAILED,
+		type: actionTypes.ENTER_DAI_POOL_FAILED,
 		error: error
 	};
 }
 
-// GET FETCH ENTRIES
+// FETCH DEPOSIT
 
-export const fetchEntries = (web3, account) => {
+export const fetchDeposit = (web3) => {
     return dispatch => {
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
         lottery.methods.myDeposit().call()
-        .then((deposit) => {
-            let myDeposit = web3.utils.fromWei(web3.eth.abi.decodeParameter('uint256', deposit), 'finney');
-            dispatch(fetchEntriesSuccess(myDeposit));
-        }).catch((error) => {
-            dispatch(fetchEntriesFailed(error));
-        });
+            .then((deposit) => {
+                // console.log(deposit)
+                let myDeposit = web3.utils.fromWei(deposit, 'finney');
+                dispatch(fetchDepositSuccess(myDeposit));
+            }).catch((error) => {
+                dispatch(fetchDepositFailed(error));
+            });
     }
 }
 
-export const fetchEntriesSuccess = (entries) => {
+export const fetchDepositSuccess = (deposit) => {
     return {
-        type: actionTypes.FETCH_ENTRIES_SUCCESS,
-        entries: entries
+        type: actionTypes.FETCH_DEPOSIT_SUCCESS,
+        deposit: deposit
 	};
 }
 
-export const fetchEntriesFailed = (error) => {
+export const fetchDepositFailed = (error) => {
     return {
-		type: actionTypes.FETCH_ENTRIES_FAILED,
+		type: actionTypes.FETCH_DEPOSIT_FAILED,
 		error: error
 	};
 }
@@ -304,3 +318,136 @@ export const fetchCurrentAprFailed = (error) => {
 	};
 }
 
+// GET ENTRY DATA (NUMBER OF ENTRANTS=SAVERS)
+export const fetchEntrants = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        lottery.methods.entryData().call()
+            .then((entrants) => {
+                // console.log(entrants);
+                entrants = Number(entrants[0]);
+                dispatch(fetchEntrantsSuccess(entrants));
+            }).catch((error) => {
+                dispatch(fetchEntrantsFailed(error));
+            });
+
+    }
+}
+
+export const fetchEntrantsSuccess = (entrants) => {
+    return {
+        type: actionTypes.FETCH_ENTRANTS_SUCCESS,
+        entrants: entrants
+	};
+}
+
+export const fetchEntrantsFailed = (error) => {
+    return {
+		type: actionTypes.FETCH_ENTRANTS_FAILED,
+		error: error
+	};
+}
+
+// WITHDRAW ETHER
+export const withdrawEther = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.withdraw().send({
+                from: accounts[0],
+            })
+                .once('transactionHash', (hash) => { console.log(hash); })
+                .once('receipt', (receipt) => { 
+                    console.log(receipt); 
+                    dispatch(withdrawEtherSuccess());
+                    console.log("withdrawal processed!");
+                }).catch((error) => {
+                    dispatch(withdrawEtherFailed(error));
+                });
+            });
+
+    }
+}
+
+export const withdrawEtherSuccess = () => {
+    return {
+        type: actionTypes.WITHDRAW_ETHER_SUCCESS
+	};
+}
+
+export const withdrawEtherFailed = (error) => {
+    return {
+		type: actionTypes.WITHDRAW_ETHER_FAILED,
+		error: error
+	};
+}
+
+// WITHDRAW DAI
+export const withdrawDai = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.withdrawDai().send({
+                from: accounts[0],
+            })
+                .once('transactionHash', (hash) => { console.log(hash); })
+                .once('receipt', (receipt) => { 
+                    console.log(receipt); 
+                    dispatch(withdrawDaiSuccess());
+                    console.log("withdrawal processed!");
+                }).catch((error) => {
+                    dispatch(withdrawDaiFailed(error));
+                });
+            });
+
+    }
+}
+
+export const withdrawDaiSuccess = () => {
+    return {
+        type: actionTypes.WITHDRAW_DAI_SUCCESS
+	};
+}
+
+export const withdrawDaiFailed = (error) => {
+    return {
+		type: actionTypes.WITHDRAW_DAI_FAILED,
+		error: error
+	};
+}
+
+// GET ENTRIES/SAVERS
+export const fetchEntries = (web3) => {
+    return dispatch => {
+        let entries = [];
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+        lottery.methods.entryData().call().then((entrants) => {
+            for (var i=0; i<entrants[0] - 1; i++) {
+                lottery.methods.entrants(i).call().then((entrant) => {
+                    //lottery.methods.saverDeposit(entrant).then((deposit) => {
+                       entries.push({'saver': entrant});
+
+                    //})
+                })
+            }
+            dispatch(fetchEntriesSuccess(entries));
+            }).catch((error) => {
+                dispatch(fetchEntriesFailed(error));
+            });
+
+    }
+}
+
+export const fetchEntriesSuccess = (entries) => {
+    return {
+        type: actionTypes.FETCH_ENTRIES_SUCCESS,
+        entries: entries
+	};
+}
+
+export const fetchEntriesFailed = (error) => {
+    return {
+		type: actionTypes.FETCH_ENTRIES_FAILED,
+		error: error
+	};
+}

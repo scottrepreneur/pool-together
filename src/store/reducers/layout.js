@@ -4,7 +4,8 @@ import { updateObject } from '../utility';
 const initialState = {
 	address: null,
 	network: null,
-	balance: null,
+	ethBalance: 0,
+	daiBalance: 0,
 	loading: true,
 	error: false
 }
@@ -22,13 +23,24 @@ const reducer = (state = initialState, action) => {
 				error: action.error,
 				loading: false
 			});
-		case actionTypes.FETCH_BALANCE_SUCCESS:
+		case actionTypes.FETCH_ETH_BALANCE_SUCCESS:
 			return updateObject(state, {
-				balance: action.balance,
+				ethBalance: action.balance,
 				error: false,
 				loading: false
             });
-        case actionTypes.FETCH_BALANCE_FAILED:
+        case actionTypes.FETCH_ETH_BALANCE_FAILED:
+			return updateObject(state, {
+				error: action.error,
+				loading: false
+			});
+		case actionTypes.FETCH_DAI_BALANCE_SUCCESS:
+			return updateObject(state, {
+				daiBalance: action.balance,
+				error: false,
+				loading: false
+            });
+        case actionTypes.FETCH_DAI_BALANCE_FAILED:
 			return updateObject(state, {
 				error: action.error,
 				loading: false

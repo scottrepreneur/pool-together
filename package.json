@@ -1,9 +1,8 @@
 {
-  "name": "powerdai",
-  "version": "0.1.0",
+  "name": "pool-together",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
-    "@makerdao/dai": "^0.11.1",
     "axios": "^0.18.0",
     "bignumber.js": "^8.0.2",
     "fortmatic": "^0.3.2",
@@ -13,7 +12,8 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",
     "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "web3": "1.0.0-beta.35"
   },
   "scripts": {
     "start": "react-scripts start",

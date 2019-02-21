@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  power-dai:
-    image: power_dai:dev
+  pool-together:
+    image: pool_together:dev
     build:
       context: .
     container_name: power_dai

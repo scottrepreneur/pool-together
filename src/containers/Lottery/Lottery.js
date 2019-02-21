@@ -16,6 +16,8 @@ class Lottery extends Component {
         this.props.onFetchCurrentPool(window.web3);
         this.props.onFetchCurrentApr();
         this.props.onCheckDaiAllowance(window.web3);
+        this.props.onFetchEntrants(window.web3);
+        this.props.onFetchDeposit(window.web3);
     }
 
     onEnterHandler = () => {
@@ -29,6 +31,7 @@ class Lottery extends Component {
         }
         let apr = Number(this.props.currentApr).toFixed(2);
         let currentPool = Number(this.props.currentPool).toFixed(2);
+
         return (
             <div className={classes.Lottery}>
                 <h2>A Lottery You Can't Lose!</h2>
@@ -51,6 +54,8 @@ class Lottery extends Component {
                 <div>
                     <p>Current Principal: {currentPool}</p>
                     <p>APR: {apr}%</p>
+                    <p>Entrants: {this.props.entrants}</p>
+                    <p>My Deposit: {this.props.myDeposit}</p>
                 </div>
             </div>
             
@@ -64,7 +69,9 @@ const mapStateToProps = state => {
         timeStopSplash: state.lottery.timeStopSplash,
         currentPool: state.lottery.currentPool,
         currentApr: state.lottery.currentApr,
-        allowance: state.lottery.allowance
+        allowance: state.lottery.allowance,
+        entrants: state.lottery.entrants,
+        myDeposit: state.lottery.deposit
 	}
 }
 
@@ -74,7 +81,9 @@ const mapDispatchToProps = dispatch => {
         onFetchTimeStopSplash: (web3) => dispatch(actions.fetchTimeStopSplash(web3)),
         onFetchCurrentPool: (web3) => dispatch(actions.fetchCurrentPool(web3)),
         onFetchCurrentApr: () => dispatch(actions.fetchCurrentApr()),
-        onCheckDaiAllowance: (web3) => dispatch(actions.checkDaiAllowance(web3))
+        onCheckDaiAllowance: (web3) => dispatch(actions.checkDaiAllowance(web3)),
+        onFetchEntrants: (web3) => dispatch(actions.fetchEntrants(web3)),
+        onFetchDeposit: (web3) => dispatch(actions.fetchDeposit(web3))
 	}
 }
 

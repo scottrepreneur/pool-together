@@ -80,7 +80,8 @@ class Enter extends Component {
                 <h2>How much would you like to save?</h2>
                 <p>You must save at least $20 for this pool</p>
                 {errorMessage}
-                {form}
+				{form}
+				<p>You have {Number(this.props.daiBalance).toFixed(1)} Dai.</p>
                 <Button 
                     btnType="LottoEntry"
                     clicked={this.onEnterPoolHandler}>
@@ -93,7 +94,9 @@ class Enter extends Component {
 
 const mapStateToProps = state => {
 	return {
-		allowance: state.lottery.allowance
+		allowance: state.lottery.allowance,
+		daiBalance: state.layout.daiBalance,
+		error: state.lottery.error
 	}
 }
 
@@ -101,7 +104,8 @@ const mapDispatchToProps = dispatch => {
 	return {
 		onEnterPool: (web3, amount) => dispatch(actions.enterDaiPool(web3, amount)),
 		onCheckDaiAllowance: (web3) => dispatch(actions.checkDaiAllowance(web3)),
-		onApproveDai: (web3) => dispatch(actions.approveDai(web3))
+		onApproveDai: (web3) => dispatch(actions.approveDai(web3)),
+		onFetchBalance: (web3) => dispatch(actions.fetchDaiBalance(web3))
 	}
 }
 

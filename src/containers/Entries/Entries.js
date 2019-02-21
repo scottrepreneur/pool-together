@@ -13,7 +13,7 @@ class Entries extends Component {
     render () {
         return (
             <div className={classes.Entries}>
-                <h2>My Entries</h2>
+                <h2>Pool Entries</h2>
                 {this.props.entries}
             </div>
         )

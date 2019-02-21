@@ -2,11 +2,12 @@
 		margin: 10px 0;
 		box-sizing: border-box;
 		display: block;
-		width: 100%;
+		width: 115px;
+		border-radius: 8px;
 	}
 
 	.NavigationItem a {
-		color: white;
+		color: #253239;
 		text-decoration: none;
 		width: 100%;
 		box-sizing: border-box;
@@ -17,6 +18,7 @@
 	.NavigationItem a:active,
 	.NavigationItem a.active {
 		color: #3B78E7;
+		border-radius: 4px;
 	}
 
 @media (min-width: 500px) {
@@ -24,8 +26,9 @@
 		margin: 0;
 		display: flex;
 		height: 100%;
-		width: auto;
+		width: 115px;
 		align-items: center;
+		padding-right: 5px;
 	}
 
 	.NavigationItem a {
@@ -39,7 +42,6 @@
 	.NavigationItem a:active,
 	.NavigationItem a.active {
 		background-color: #3B78E7;
-		border-bottom: 4px solid #303030;
 		color: white;
 	}
 }
