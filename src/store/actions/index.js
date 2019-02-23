@@ -22,5 +22,6 @@ export {
 	withdrawDai,
 } from './lottery';
 export {
-	setPoolState,
+	fetchManager,
+	pickWinner	
 } from './manage';

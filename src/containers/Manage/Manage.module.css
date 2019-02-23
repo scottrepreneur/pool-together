@@ -1,3 +1,12 @@
 .Manage {
-    
+    text-align: center;
+    color: black;
+    height: 575px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.Manage h2 {
+    padding-top: 50px;
 }

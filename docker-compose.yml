@@ -5,7 +5,7 @@ services:
     image: pool_together:dev
     build:
       context: .
-    container_name: power_dai
+    container_name: pool_together
     command: ["yarn", "start"]
     volumes:
       - .:/app

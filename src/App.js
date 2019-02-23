@@ -17,6 +17,10 @@ const asyncEntries = asyncComponent(() => {
   return import('./containers/Entries/Entries');
 });
 
+const asyncManage = asyncComponent(() => {
+  return import('./containers/Manage/Manage');
+});
+
 class App extends Component {
   goTo(route) {
     this.props.history.replace(`/${route}`)
@@ -29,6 +33,7 @@ class App extends Component {
           <Switch>
             <Route path="/enter" component={asyncEnter} />
             <Route path="/entries" component={asyncEntries} />
+            <Route path="/manage" component={asyncManage} />
             <Route path="/" component={asyncLottery} />
           </Switch>
          </Layout>

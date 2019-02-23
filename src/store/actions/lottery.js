@@ -5,7 +5,7 @@ const BigNumber = require('bignumber.js');
 let baseTen = new BigNumber(10)
 
 const lotteryAddress = process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
-const lotteryAbi = [{"constant":false,"inputs":[],"name":"splash","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"myDeposit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"poolSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pickWinner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"stateOfPool","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryData","outputs":[{"name":"Entries","type":"uint256"},{"name":"Size","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolReturn","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amtDai","type":"uint256"}],"name":"splashDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stateVar","type":"uint256"}],"name":"setState","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"creationTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawDai","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"entrants","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"daisend","type":"uint256"}],"name":"earnInterest","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"daiAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"deposit","type":"uint256"},{"indexed":false,"name":"total","type":"uint256"}],"name":"splashDown","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"savings","type":"uint256"}],"name":"takeHome","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"state","type":"uint8"}],"name":"Saving","type":"event"}]
+const lotteryAbi = [{"constant":false,"inputs":[],"name":"splash","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"myDeposit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryDaiMinimum","outputs":[{"name":"Minimum","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"entryEthMinimum","outputs":[{"name":"Minimum","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"saver","type":"address"}],"name":"saverDeposit","outputs":[{"name":"Savings","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pickWinner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"stateOfPool","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryData","outputs":[{"name":"Entries","type":"uint256"},{"name":"Size","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolReturn","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amtDai","type":"uint256"}],"name":"splashDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stateVar","type":"uint256"}],"name":"setState","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"creationTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawDai","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"entrants","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"daisend","type":"uint256"}],"name":"earnInterest","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"daiAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"deposit","type":"uint256"},{"indexed":false,"name":"total","type":"uint256"}],"name":"splashDown","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"savings","type":"uint256"}],"name":"takeHome","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"state","type":"uint8"}],"name":"Saving","type":"event"}]
 
 const daiAddress = process.env.REACT_APP_DAI_CONTRACT_ADDRESS
 const daiAbi = [{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"}]
@@ -247,18 +247,23 @@ export const enterDaiPoolFailed = (error) => {
 	};
 }
 
-// FETCH DEPOSIT
+// FETCH CURRENT USER'S DEPOSIT
 
 export const fetchDeposit = (web3) => {
     return dispatch => {
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
-        lottery.methods.myDeposit().call()
-            .then((deposit) => {
-                // console.log(deposit)
-                let myDeposit = web3.utils.fromWei(deposit, 'finney');
-                dispatch(fetchDepositSuccess(myDeposit));
-            }).catch((error) => {
-                dispatch(fetchDepositFailed(error));
+        web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.myDeposit().call({
+                from: accounts[0]
+            })
+                .then((deposit) => {
+                    //console.log(deposit)
+                    // I'm getting something different for this 18dd -> 8768 (uint -> wei(?))
+                    let myDeposit = web3.utils.fromWei(deposit, 'ether');
+                    dispatch(fetchDepositSuccess(myDeposit));
+                }).catch((error) => {
+                    dispatch(fetchDepositFailed(error));
+                });
             });
     }
 }
@@ -281,7 +286,7 @@ export const fetchDepositFailed = (error) => {
 
 export const fetchCurrentApr = () => {
     return dispatch => {
-        
+        // check the dai address??
         const graph_query = `{ 
             market(id: "${process.env.REACT_APP_DAI_CONTRACT_ADDRESS}") {
                 id
@@ -421,20 +426,25 @@ export const fetchEntries = (web3) => {
     return dispatch => {
         let entries = [];
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
-        lottery.methods.entryData().call().then((entrants) => {
-            for (var i=0; i<entrants[0] - 1; i++) {
-                lottery.methods.entrants(i).call().then((entrant) => {
-                    //lottery.methods.saverDeposit(entrant).then((deposit) => {
-                       entries.push({'saver': entrant});
-
-                    //})
-                })
-            }
-            dispatch(fetchEntriesSuccess(entries));
+        web3.eth.getAccounts().then(accounts => {
+            lottery.methods.entryData().call({from: accounts[0]}).then((entrants) => {
+                for (var i=0; i<Number(entrants[0]); i++) {
+                    //console.log(i);
+                    lottery.methods.entrants(i).call().then((entrant) => {
+                        //lottery.methods.saverDeposit(entrant).call().then((deposit) => {
+                           entries.push({'saver': entrant});
+    
+                        //})
+                    });
+                }
+                //console.log(entries)
+                //console.log(entries.length);
+                dispatch(fetchEntriesSuccess(entries));
             }).catch((error) => {
                 dispatch(fetchEntriesFailed(error));
-            });
-
+            });    
+        })
+        
     }
 }
 

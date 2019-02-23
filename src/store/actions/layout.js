@@ -12,6 +12,7 @@ export const fetchAddress = (web3) => {
 		web3.eth.getAccounts()
 			.then((accounts) => {
 				let address = accounts[0];
+				console.log(accounts);
 				dispatch(fetchAddressSuccess(address));
 				})
 			.catch((err) => {
@@ -33,6 +34,10 @@ export const fetchAddressFailed = (error) => {
 		error: error
     }
 }
+
+// USER HAS WEB3 BUT IS NOT LOGGED IN (TRIGGER METAMASK)
+
+
 
 // GET USER ETHER BALANCE
 

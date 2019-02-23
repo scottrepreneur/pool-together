@@ -11,10 +11,37 @@ class Entries extends Component {
     }
     
     render () {
+        let entries = <p>"No Entries yet"</p>
+        if (this.props.entries) {
+            console.log(this.props.entries)
+            //console.log(this.props.entries.length)
+        }
+        if (this.props.entries != []) {
+            let rows = this.props.entries.map(entry => {
+                return (
+                <tr key={entry.saver}>
+                    <td>{entry.saver}</td>
+                    <td>15</td>
+                </tr>)
+            })
+            entries = (
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Saver</td>
+                            <td>Deposit</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {rows}
+                    </tbody>
+                </table>)
+        }
         return (
             <div className={classes.Entries}>
                 <h2>Pool Entries</h2>
-                {this.props.entries}
+                {entries}
+                
             </div>
         )
     }
@@ -34,4 +61,4 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Entries);
+export default connect(mapStateToProps, mapDispatchToProps)(Entries);

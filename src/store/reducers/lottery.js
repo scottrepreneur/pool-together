@@ -4,6 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
 	currentPot: 0,
 	entrants: 0,
+	entries: [],
 	deposit: 0,
     timeStopSplash: null,
     timeStopSave: null,

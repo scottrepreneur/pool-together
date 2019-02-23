@@ -1,7 +1,7 @@
 .Button {
     background-color: transparent;
     border: none;
-    color: white;
+    color: black;
     outline: none;
     cursor: pointer;
     font: inherit;
@@ -34,6 +34,7 @@
 
 .LottoEntry {
     font-size: 25px;
+    color: white;
     background-color: #51B9F9;
     border-radius: 10px;
     width: 300px;

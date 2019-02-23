@@ -1,37 +1,33 @@
 import * as actionTypes from './actionTypes';
-import { fetchPoolState } from './lottery';
 
 const lotteryAddress = process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
 const lotteryAbi = [{"constant":false,"inputs":[],"name":"splash","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"myDeposit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"poolSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pickWinner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"stateOfPool","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryData","outputs":[{"name":"Entries","type":"uint256"},{"name":"Size","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolReturn","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amtDai","type":"uint256"}],"name":"splashDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stateVar","type":"uint256"}],"name":"setState","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"creationTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawDai","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"entrants","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"daisend","type":"uint256"}],"name":"earnInterest","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"daiAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"deposit","type":"uint256"},{"indexed":false,"name":"total","type":"uint256"}],"name":"splashDown","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"savings","type":"uint256"}],"name":"takeHome","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"state","type":"uint8"}],"name":"Saving","type":"event"}]
 
-// CHANGE POOL STATE (WILL BE TIME BASED IN ANOTHER VERSION)
-
-export const setPoolState = (web3, newState) => {
+export const fetchManager = (web3) => {
     return dispatch => {
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
 
 		web3.eth.getAccounts().then((accounts) => {
-            lottery.methods.setState(newState).send({
-                    'from': accounts[0]
-                })
-                dispatch(setPoolStateSuccess());
-                dispatch(fetchPoolState());
-			})
+            lottery.methods.owner().call().then((manager) => {
+                dispatch(fetchManagerSuccess(manager));
+            })
 			.catch((err) => {
-				dispatch(setPoolStateFailed(err));
-			});
+				dispatch(fetchManagerFailed(err));
+            });
+        });
     }
 }
 
-export const setPoolStateSuccess = () => {
+export const fetchManagerSuccess = (manager) => {
     return {
-        type: actionTypes.SET_POOL_STATE_SUCCESS
+        type: actionTypes.FETCH_MANAGER_SUCCESS,
+        manager: manager
     }
 }
 
-export const setPoolStateFailed = (error) => {
+export const fetchManagerFailed = (error) => {
     return {
-        type: actionTypes.SET_POOL_STATE_FAILED,
+        type: actionTypes.FETCH_MANAGER_FAILED,
 		error: error
     }
 }
