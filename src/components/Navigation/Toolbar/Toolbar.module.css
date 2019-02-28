@@ -15,7 +15,7 @@
 }
 
 .DesktopOnly {
-	width: 350px;
+	width: 450px;
 	padding-top: 25px;
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);

@@ -16,7 +16,7 @@ class Entries extends Component {
             console.log(this.props.entries)
             //console.log(this.props.entries.length)
         }
-        if (this.props.entries != []) {
+        if (this.props.entries !== []) {
             let rows = this.props.entries.map(entry => {
                 return (
                 <tr key={entry.saver}>
@@ -28,8 +28,8 @@ class Entries extends Component {
                 <table>
                     <thead>
                         <tr>
-                            <td>Saver</td>
-                            <td>Deposit</td>
+                            <th>Saver</th>
+                            <th>Deposit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,6 @@ class Entries extends Component {
             <div className={classes.Entries}>
                 <h2>Pool Entries</h2>
                 {entries}
-                
             </div>
         )
     }

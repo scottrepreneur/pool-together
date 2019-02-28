@@ -7,6 +7,7 @@ const navigationItems = (props) => {
 
 	return (
 		<ul className={classes.NavigationItems}>
+			<NavigationItem onClickHandler={props.closed} link="/create">Create</NavigationItem>
 			<NavigationItem onClickHandler={props.closed} link="/manage">Manage</NavigationItem>
 			<NavigationItem onClickHandler={props.closed} link="/entries">Entries</NavigationItem>
 		</ul>	

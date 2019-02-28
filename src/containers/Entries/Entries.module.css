@@ -9,3 +9,18 @@
 .Entries h2 {
     padding-top: 50px;
 }
+
+.Entries table {
+    margin: auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.Entries th, td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.Entries th {
+    font-weight: bold;
+}

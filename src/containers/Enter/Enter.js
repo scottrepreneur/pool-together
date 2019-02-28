@@ -80,13 +80,16 @@ class Enter extends Component {
                 <h2>How much would you like to save?</h2>
                 <p>You must save at least $20 for this pool</p>
                 {errorMessage}
-				{form}
-				<p>You have {Number(this.props.daiBalance).toFixed(1)} Dai.</p>
-                <Button 
-                    btnType="LottoEntry"
-                    clicked={this.onEnterPoolHandler}>
-                    Enter the Pool
-                </Button>
+				<form>
+					{form}
+					<p>You have {Number(this.props.daiBalance).toFixed(1)} Dai.</p>
+					<Button 
+						btnType="LottoEntry"
+						clicked={this.onEnterPoolHandler}>
+						Enter the Pool
+					</Button>
+				</form>
+				
             </div>
         );
     }

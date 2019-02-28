@@ -1,7 +1,7 @@
 import * as actionTypes from './actionTypes';
 
+const lotteryAbi = require('../../eth/contracts/PoolTogether.js');
 const lotteryAddress = process.env.REACT_APP_LOTTERY_CONTRACT_ADDRESS
-const lotteryAbi = [{"constant":false,"inputs":[],"name":"splash","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"myDeposit","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"poolSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"pickWinner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"stateOfPool","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"entryData","outputs":[{"name":"Entries","type":"uint256"},{"name":"Size","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"poolReturn","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"amtDai","type":"uint256"}],"name":"splashDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_stateVar","type":"uint256"}],"name":"setState","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"creationTime","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdrawDai","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"entrants","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"daisend","type":"uint256"}],"name":"earnInterest","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"daiAddress","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"deposit","type":"uint256"},{"indexed":false,"name":"total","type":"uint256"}],"name":"splashDown","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"saver","type":"address"},{"indexed":false,"name":"savings","type":"uint256"}],"name":"takeHome","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"state","type":"uint8"}],"name":"Saving","type":"event"}]
 
 export const fetchManager = (web3) => {
     return dispatch => {
@@ -62,8 +62,131 @@ export const pickWinnerFailed = (error) => {
     }
 }
 
+// GET WINNER?
+
 // SUPPLY COMPOUND FINANCE
+export const earnInterest = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+
+		web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.poolSize().call()
+            .then((poolSize) => {
+                console.log('earn interest')
+                lottery.methods.earnInterest(poolSize).send({
+                        'from': accounts[0]
+                    })
+                })
+                .then(() => {
+                    dispatch(earnInterestSuccess());
+                })
+                .catch((err) => {
+                    dispatch(earnInterestFailed(err));
+                });
+            })
+            
+    }
+}
+
+export const earnInterestSuccess = () => {
+    return {
+        type: actionTypes.EARN_INTEREST_SUCCESS
+    }
+}
+
+export const earnInterestFailed = (error) => {
+    return {
+        type: actionTypes.EARN_INTEREST_FAILED,
+		error: error
+    }
+}
 
 // GET COMPOUND SUPPLY BALANCE
+export const fetchCompoundBalance = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+
+		web3.eth.getAccounts().then((accounts) => {
+            // lottery.methods.getCompoundBalance().call()
+            // .then((balance) => {})
+                dispatch(fetchCompoundBalanceSuccess(2.00));
+			})
+			.catch((err) => {
+				dispatch(earnInterestFailed(err));
+			});
+    }
+}
+
+export const fetchCompoundBalanceSuccess = (balance) => {
+    return {
+        type: actionTypes.FETCH_COMPOUND_SUPPLY_BALANCE_SUCCESS,
+        balance: balance
+    }
+}
+
+export const fetchCompoundBalanceFailed = (error) => {
+    return {
+        type: actionTypes.FETCH_COMPOUND_SUPPLY_BALANCE_FAILED,
+		error: error
+    }
+}
 
 // RESTART POOL
+export const restartPool = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+
+		web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.restartPool().send({
+                    'from': accounts[0]
+                })
+                dispatch(restartPoolSuccess());
+			})
+			.catch((err) => {
+				dispatch(restartPoolFailed(err));
+			});
+    }
+}
+
+export const restartPoolSuccess = () => {
+    return {
+        type: actionTypes.RESTART_POOL_SUCCESS
+    }
+}
+
+export const restartPoolFailed = (error) => {
+    return {
+        type: actionTypes.RESTART_POOL_FAILED,
+		error: error
+    }
+}
+
+// CREATE POOL
+export const createPool = (web3) => {
+    return dispatch => {
+        const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
+
+		web3.eth.getAccounts().then((accounts) => {
+            lottery.methods.restartPool().send({
+                    'from': accounts[0]
+                })
+                dispatch(createPoolSuccess());
+			})
+			.catch((err) => {
+				dispatch(createPoolFailed(err));
+			});
+    }
+}
+
+export const createPoolSuccess = () => {
+    return {
+        type: actionTypes.CREATE_POOL_SUCCESS
+    }
+}
+
+export const createPoolFailed = (error) => {
+    return {
+        type: actionTypes.CREATE_POOL_FAILED,
+		error: error
+    }
+}

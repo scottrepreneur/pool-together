@@ -427,7 +427,8 @@ export const fetchEntries = (web3) => {
         let entries = [];
         const lottery = new web3.eth.Contract(lotteryAbi, lotteryAddress);
         web3.eth.getAccounts().then(accounts => {
-            lottery.methods.entryData().call({from: accounts[0]}).then((entrants) => {
+            lottery.methods.entryData().call({from: accounts[0]})
+            .then((entrants) => {
                 for (var i=0; i<Number(entrants[0]); i++) {
                     //console.log(i);
                     lottery.methods.entrants(i).call().then((entrant) => {

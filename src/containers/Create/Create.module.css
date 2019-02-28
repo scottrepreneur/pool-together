@@ -1,0 +1,16 @@
+.Create {
+    text-align: center;
+    height: 750px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.Create h2 {
+    padding-top: 50px;
+}
+
+.Create form {
+    max-width: 500px;
+    margin: auto;
+}

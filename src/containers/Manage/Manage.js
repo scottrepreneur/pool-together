@@ -14,6 +14,18 @@ class Manage extends Component {
         this.props.onFetchEntrants(window.web3);
     }
 
+    earnInterestHandler = () => {
+        this.props.onEarnInterest(window.web3);
+    }
+
+    pickWinnerHandler = () => {
+        this.props.onPickWinner(window.web3);
+    }
+
+    restartPoolHandler = () => {
+        this.props.onRestartPool(window.web3);
+    }
+
     render () {
         let poolState = "Open for Savings!";
         if (this.props.poolState === 1) {
@@ -33,9 +45,9 @@ class Manage extends Component {
                 <p>This pool is managed by: {this.props.manager}</p>
                 <p>Pool State: {poolState}</p>
                 
-                <Button>Earn Interest</Button>
-                <Button>Pick Winner</Button>
-                <Button>Reset Pool</Button>
+                <Button btnType="Manage" clicked={this.earnInterestHandler}>Earn Interest</Button>
+                <Button btnType="Manage" clicked={this.pickWinnerHandler}>Pick Winner</Button>
+                <Button btnType="Inactive" clicked={this.restartPoolHandler}>Restart Pool</Button>
                 
             </div>
         );
@@ -58,7 +70,10 @@ const mapDispatchToProps = dispatch => {
         onFetchCurrentPool: (web3) => dispatch(actions.fetchCurrentPool(web3)),
         onFetchCurrentApr: () => dispatch(actions.fetchCurrentApr()),
         onFetchEntrants: (web3) => dispatch(actions.fetchEntrants(web3)),
-        onFetchManager: (web3) => dispatch(actions.fetchManager(web3))
+        onFetchManager: (web3) => dispatch(actions.fetchManager(web3)),
+        onEarnInterest: (web3) => dispatch(actions.earnInterest(web3)),
+        onPickWinner: (web3) => dispatch(actions.pickWinner(web3)),
+        onRestartPool: (web3) => dispatch(actions.restartPool(web3))
 	}
 }
 

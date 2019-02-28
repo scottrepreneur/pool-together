@@ -23,5 +23,9 @@ export {
 } from './lottery';
 export {
 	fetchManager,
-	pickWinner	
+	pickWinner,
+	earnInterest,
+	fetchCompoundBalance,
+	restartPool,
+	createPool
 } from './manage';

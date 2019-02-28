@@ -40,3 +40,15 @@
     width: 300px;
     height: 75px;
 }
+
+.Manage {
+    border: solid 1px blue;
+    border-radius: 8px;
+}
+
+.Inactive {
+    border: solid 1px gray;
+    border-radius: 8px;
+    background-color: gray;
+    color: white;
+}
