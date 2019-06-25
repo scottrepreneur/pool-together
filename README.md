@@ -1,5 +1,7 @@
 # Pool Together - A Lottery You Can't Lose
 
+EthDenver Hackathon repo
+
 ## Development
 
 Run locally with `docker-compose up` inside the main repo. Check out [.env.sample](https://github.com/scottrepreneur/pool-together/blob/master/.env.sample) for necessary environment variables.
